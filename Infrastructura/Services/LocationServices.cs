@@ -1,3 +1,4 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Cantext;
@@ -11,52 +12,52 @@ public class LocationServices : ILocationServices
     {
         _context = context;
     }
-    public async Task<Response<Location>> AddLocation(Location location)
+    public async Task<Response<AddLocationDto>> AddLocation(AddLocationDto model)
     {
         try
         {
+            var location = new Location()
+            {
+                Description = model.Description,
+                Name = model.Name
+            };
             await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
-            return new Response<Location>(location);
+            return new Response<AddLocationDto>(model);
         }
         catch (System.Exception ex)
         {
 
-            return new Response<Location>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            return new Response<AddLocationDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
 
         }
 
     }
-    public async Task<Response<List<Location>>> GetLocation()
+    public async Task<Response<List<GetLocationDto>>> GetLocation()
     {
-        try
+        var locations = await _context.Locations.Select(l => new GetLocationDto()
         {
-            var response = await _context.Locations.ToListAsync();
-            return new Response<List<Location>>(response);
-        }
-        catch (System.Exception ex)
-        {
-
-            return new Response<List<Location>>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
-        }
-
+            Description = l.Description,
+            Id = l.Id,
+            Name = l.Name
+        }).ToListAsync();
+        return new Response<List<GetLocationDto>>(locations);
     }
-    public async Task<Response<Location>> UpdateLocation(Location location)
+    public async Task<Response<AddLocationDto>> UpdateLocation(AddLocationDto location)
     {
         try
         {
             var record = await _context.Locations.FindAsync(location.Id);
-            if (record == null) return new Response<Location>(System.Net.HttpStatusCode.NotFound, "No record found");
+            if (record == null) return new Response<AddLocationDto>(System.Net.HttpStatusCode.NotFound, "No record found");
             record.Name = location.Name;
             record.Description = location.Description;
             await _context.SaveChangesAsync();
-            return new Response<Location>(record);
+            return new Response<AddLocationDto>(location);
         }
         catch (System.Exception ex)
         {
 
-            return new Response<Location>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            return new Response<AddLocationDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
 
         }
 

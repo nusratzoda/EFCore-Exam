@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     /// <inheritdoc />
-    public partial class Chelenge : Migration
+    public partial class challengeId : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +18,8 @@ namespace Infrastructura.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,8 +32,8 @@ namespace Infrastructura.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,26 +41,27 @@ namespace Infrastructura.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "Groupes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    GroupsNick = table.Column<string>(type: "text", nullable: true),
-                    ChalangeId = table.Column<int>(type: "integer", nullable: true),
-                    ChallangeId = table.Column<int>(type: "integer", nullable: true),
+                    GroupsNick = table.Column<string>(type: "text", nullable: false),
+                    ChallangeId = table.Column<int>(type: "integer", nullable: false),
+                    ChalangeId = table.Column<int>(type: "integer", nullable: false),
                     NeededMember = table.Column<bool>(type: "boolean", nullable: false),
-                    TeamSlogan = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<string>(type: "text", nullable: true)
+                    TeamSlogan = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
+                    table.PrimaryKey("PK_Groupes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groups_Chalanges_ChalangeId",
+                        name: "FK_Groupes_Chalanges_ChalangeId",
                         column: x => x.ChalangeId,
                         principalTable: "Chalanges",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,10 +70,10 @@ namespace Infrastructura.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FullName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Phone = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<string>(type: "text", nullable: true),
+                    FullName = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     GroupId = table.Column<int>(type: "integer", nullable: false),
                     LocationId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -79,9 +81,9 @@ namespace Infrastructura.Migrations
                 {
                     table.PrimaryKey("PK_Participants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participants_Groups_GroupId",
+                        name: "FK_Participants_Groupes_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Groups",
+                        principalTable: "Groupes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -93,8 +95,8 @@ namespace Infrastructura.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_ChalangeId",
-                table: "Groups",
+                name: "IX_Groupes_ChalangeId",
+                table: "Groupes",
                 column: "ChalangeId");
 
             migrationBuilder.CreateIndex(
@@ -115,7 +117,7 @@ namespace Infrastructura.Migrations
                 name: "Participants");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "Groupes");
 
             migrationBuilder.DropTable(
                 name: "Locations");

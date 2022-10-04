@@ -1,10 +1,9 @@
-namespace Domain.Entites;
+namespace Domain.Dtos;
+using System.ComponentModel.DataAnnotations;
 
-public class Location
+public class GetLocationDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public virtual List<Participant> Participants { get; set; }
-
 }

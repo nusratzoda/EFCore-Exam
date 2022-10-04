@@ -31,9 +31,11 @@ namespace Infrastructura.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -49,22 +51,24 @@ namespace Infrastructura.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ChalangeId")
+                    b.Property<int>("ChalangeId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ChallangeId")
+                    b.Property<int>("ChallangeId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("GroupsNick")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("NeededMember")
                         .HasColumnType("boolean");
 
                     b.Property<string>("TeamSlogan")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -83,9 +87,11 @@ namespace Infrastructura.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -101,13 +107,15 @@ namespace Infrastructura.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("GroupId")
@@ -117,6 +125,7 @@ namespace Infrastructura.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -132,7 +141,9 @@ namespace Infrastructura.Migrations
                 {
                     b.HasOne("Domain.Entites.Chalange", "Chalange")
                         .WithMany("Groupes")
-                        .HasForeignKey("ChalangeId");
+                        .HasForeignKey("ChalangeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Chalange");
                 });

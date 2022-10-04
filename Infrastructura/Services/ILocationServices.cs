@@ -1,12 +1,12 @@
-using Domain.Entites;
+using Domain.Dtos;
 using Domain.Response;
-
+using Domain.Entites;
 namespace Infrastructura.Services;
 
 public interface ILocationServices
 {
-    Task<Response<Location>> AddLocation(Location location);
-    Task<Response<List<Location>>> GetLocation();
-    Task<Response<Location>> UpdateLocation(Location location);
+    Task<Response<AddLocationDto>> AddLocation(AddLocationDto location);
+    Task<Response<List<GetLocationDto>>> GetLocation();
+    Task<Response<AddLocationDto>> UpdateLocation(AddLocationDto location);
     Task<Response<string>> DaleteLocation(int id);
 }

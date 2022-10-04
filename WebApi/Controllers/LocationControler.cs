@@ -1,3 +1,4 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Services;
@@ -17,19 +18,19 @@ public class LocationControler : ControllerBase
     }
 
     [HttpGet("GetLocation")]
-    public async Task<Response<List<Location>>> GetLocation()
+    public async Task<Response<List<GetLocationDto>>> GetLocation()
     {
         return await _locationService.GetLocation();
     }
 
 
     [HttpPost("InsertLocation")]
-    public async Task<Response<Location>> AddLocation(Location location)
+    public async Task<Response<AddLocationDto>> AddLocation(AddLocationDto location)
     {
         return await _locationService.AddLocation(location);
     }
     [HttpPut("UpdateLocation")]
-    public async Task<Response<Location>> UpdateLocation(Location location)
+    public async Task<Response<AddLocationDto>> UpdateLocation(AddLocationDto location)
     {
         return await _locationService.UpdateLocation(location);
     }

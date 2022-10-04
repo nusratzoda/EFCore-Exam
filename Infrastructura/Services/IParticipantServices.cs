@@ -1,12 +1,12 @@
 using Domain.Entites;
 using Domain.Response;
-
+using Domain.Dtos;
 namespace Infrastructura.Services;
 
 public interface IParticipantServices
 {
-    Task<Response<List<Participant>>> GetParticipant();
-    Task<Response<Participant>> UpdateParticipant(Participant participant);
+    Task<Response<List<GetParticipantDto>>> GetParticipant();
+    Task<Response<AddParticipantDto>> UpdateParticipant(AddParticipantDto participant);
     Task<Response<string>> DaleteParticipant(int id);
-    Task<Response<Participant>> AddParticipant(Participant participant);
+    Task<Response<AddParticipantDto>> AddParticipant(AddParticipantDto participant);
 }

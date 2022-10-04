@@ -1,13 +1,13 @@
 using Domain.Entites;
 using Domain.Response;
-
+using Domain.Dtos;
 namespace Infrastructura.Services;
 
 public interface IChalengesServices
 {
-    Task<Response<Chalange>> AddChalange(Chalange chalange);
-    Task<Response<List<Chalange>>> GetChalange();
-    Task<Response<Chalange>> UpdateChalange(Chalange chalange);
+    Task<Response<AddChalangeDto>> AddChalange(AddChalangeDto chalange);
+    Task<Response<List<GetChalangeDto>>> GetChalange();
+    Task<Response<AddChalangeDto>> UpdateChalange(AddChalangeDto chalange);
     Task<Response<string>> DaleteAuthor(int id);
 
 }

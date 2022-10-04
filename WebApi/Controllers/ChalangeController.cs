@@ -1,3 +1,4 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Services;
@@ -15,24 +16,24 @@ public class ChalangeController : ControllerBase
         _cahlengeService = cahlengeService;
     }
 
-    [HttpGet("GetChalange")]
-    public async Task<Response<List<Chalange>>> GetChalange()
+    [HttpGet]
+    public async Task<Response<List<GetChalangeDto>>> GetChalange()
     {
         return await _cahlengeService.GetChalange();
     }
 
 
-    [HttpPost("InsertAuthor")]
-    public async Task<Response<Chalange>> AddChalange(Chalange chalange)
+    [HttpPost]
+    public async Task<Response<AddChalangeDto>> AddChalange(AddChalangeDto chalange)
     {
         return await _cahlengeService.AddChalange(chalange);
     }
-    [HttpPut("UpdateChalange")]
-    public async Task<Response<Chalange>> UpdateChalange(Chalange chalange)
+    [HttpPut]
+    public async Task<Response<AddChalangeDto>> UpdateChalange(AddChalangeDto chalange)
     {
         return await _cahlengeService.UpdateChalange(chalange);
     }
-    [HttpDelete("DeleteChalange")]
+    [HttpDelete]
     public async Task<Response<string>> DeleteChalange(int id)
     {
         return await _cahlengeService.DaleteAuthor(id);

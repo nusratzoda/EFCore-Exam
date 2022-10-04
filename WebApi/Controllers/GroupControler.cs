@@ -1,3 +1,4 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Services;
@@ -16,19 +17,19 @@ public class GroupControler : ControllerBase
     }
 
     [HttpGet("GetGroup")]
-    public async Task<Response<List<Groups>>> GetGroups()
+    public async Task<Response<List<GetGroupDto>>> GetGroups()
     {
         return await _groupService.GetGroups();
     }
 
 
     [HttpPost("InsertGroup")]
-    public async Task<Response<Groups>> AddGroups(Groups groups)
+    public async Task<Response<AddGroupDto>> AddGroups(AddGroupDto groups)
     {
         return await _groupService.AddGroups(groups);
     }
     [HttpPut("UpdateGroup")]
-    public async Task<Response<Groups>> UpdateGroups(Groups groups)
+    public async Task<Response<AddGroupDto>> UpdateGroups(AddGroupDto groups)
     {
         return await _groupService.UpdateGroups(groups);
     }

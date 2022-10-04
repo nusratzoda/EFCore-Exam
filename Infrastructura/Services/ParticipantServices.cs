@@ -1,75 +1,67 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Cantext;
 using Microsoft.EntityFrameworkCore;
-
 namespace Infrastructura.Services;
-
 public class ParticipantServices : IParticipantServices
 {
-
     private readonly DataContext _context;
     public ParticipantServices(DataContext context)
     {
         _context = context;
     }
-    public async Task<Response<Participant>> AddParticipant(Participant participant)
+    public async Task<Response<AddParticipantDto>> AddParticipant(AddParticipantDto model)
     {
         try
         {
+            var participant = new Participant()
+            {
+                Email = model.Email,
+                FullName = model.FullName,
+                CreatedAt = model.CreatedAt,
+                Phone = model.Phone
+            };
             await _context.Participants.AddAsync(participant);
             await _context.SaveChangesAsync();
-            return new Response<Participant>(participant);
+            return new Response<AddParticipantDto>(model);
         }
         catch (System.Exception ex)
         {
-
-            return new Response<Participant>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
+            return new Response<AddParticipantDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
         }
-
     }
-    public async Task<Response<List<Participant>>> GetParticipant()
+    public async Task<Response<List<GetParticipantDto>>> GetParticipant()
     {
-        try
+        var participant = await _context.Participants.Select(P => new GetParticipantDto()
         {
-            var response = await _context.Participants.ToListAsync();
-            return new Response<List<Participant>>(response);
-        }
-        catch (System.Exception ex)
-        {
-
-            return new Response<List<Participant>>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
-        }
-
+            Email = P.Email,
+            Id = P.Id,
+            FullName = P.FullName,
+            Phone = P.Phone,
+            CreatedAt = P.CreatedAt,
+        }).ToListAsync();
+        var response = await _context.Groupes.ToListAsync();
+        return new Response<List<GetParticipantDto>>(participant);
     }
-    public async Task<Response<Participant>> UpdateParticipant(Participant participant)
+    public async Task<Response<AddParticipantDto>> UpdateParticipant(AddParticipantDto participant)
     {
         try
         {
             var record = await _context.Participants.FindAsync(participant.Id);
-            if (record == null) return new Response<Participant>(System.Net.HttpStatusCode.NotFound, "No record found");
+            if (record == null) return new Response<AddParticipantDto>(System.Net.HttpStatusCode.NotFound, "No record found");
             record.Email = participant.Email;
             record.FullName = participant.FullName;
-            record.Group = participant.Group;
             record.CreatedAt = participant.CreatedAt;
-            record.Location = participant.Location;
-            record.LocationId = participant.LocationId;
             record.Phone = participant.Phone;
-            record.GroupId = participant.GroupId;
             await _context.SaveChangesAsync();
-            return new Response<Participant>(record);
+            return new Response<AddParticipantDto>(participant);
         }
         catch (System.Exception ex)
         {
-
-            return new Response<Participant>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
+            return new Response<AddParticipantDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
         }
-
     }
-
     public async Task<Response<string>> DaleteParticipant(int id)
     {
         try
@@ -83,10 +75,7 @@ public class ParticipantServices : IParticipantServices
         }
         catch (System.Exception ex)
         {
-
             return new Response<string>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
         }
-
     }
 }

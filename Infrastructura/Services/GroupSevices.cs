@@ -1,3 +1,4 @@
+using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
 using Infrastructura.Cantext;
@@ -12,55 +13,64 @@ public class GroupSevices : IGroupServices
     {
         _context = context;
     }
-    public async Task<Response<Groups>> AddGroups(Groups groups)
+    public async Task<Response<AddGroupDto>> AddGroups(AddGroupDto model)
     {
         try
         {
-            await _context.Groupes.AddAsync(groups);
+            var group = new Groups()
+            {
+                TeamSlogan = model.TeamSlogan,
+                NeededMember = model.NeededMember,
+                CreatedAt = model.CreatedAt,
+                GroupsNick = model.GroupsNick,
+                ChallangeId = model.ChallangeId
+            };
+            await _context.Groupes.AddAsync(group);
             await _context.SaveChangesAsync();
-            return new Response<Groups>(groups);
+            return new Response<AddGroupDto>(model);
         }
 
         catch (Exception ex)
         {
 
-            return new Response<Groups>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            return new Response<AddGroupDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
         }
 
     }
-    public async Task<Response<List<Groups>>> GetGroups()
+    public async Task<Response<List<GetGroupDto>>> GetGroups()
     {
-        try
-        {
-            var response = await _context.Groupes.ToListAsync();
-            return new Response<List<Groups>>(response);
-        }
-        catch (Exception ex)
-        {
 
-            return new Response<List<Groups>>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-        }
+        var group = await _context.Groupes.Select(G => new GetGroupDto()
+        {
+            TeamSlogan = G.TeamSlogan,
+            Id = G.Id,
+            NeededMember = G.NeededMember,
+            GroupsNick = G.GroupsNick,
+            CreatedAt = G.CreatedAt,
+            ChallangeId = G.ChallangeId
+        }).ToListAsync();
+        var response = await _context.Groupes.ToListAsync();
+        return new Response<List<GetGroupDto>>(group);
+
 
     }
-    public async Task<Response<Groups>> UpdateGroups(Groups groups)
+    public async Task<Response<AddGroupDto>> UpdateGroups(AddGroupDto groups)
     {
         try
         {
             var record = await _context.Groupes.FindAsync(groups.Id);
-            if (record == null) return new Response<Groups>(System.Net.HttpStatusCode.NotFound, "No record found");
+            if (record == null) return new Response<AddGroupDto>(System.Net.HttpStatusCode.NotFound, "No record found");
             record.TeamSlogan = groups.TeamSlogan;
             record.NeededMember = groups.NeededMember;
-            record.Participants = groups.Participants;
             record.CreatedAt = groups.CreatedAt;
             record.GroupsNick = groups.GroupsNick;
             record.ChallangeId = groups.ChallangeId;
-            record.Chalange = groups.Chalange;
             await _context.SaveChangesAsync();
-            return new Response<Groups>(record);
+            return new Response<AddGroupDto>(groups);
         }
         catch (System.Exception ex)
         {
-            return new Response<Groups>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            return new Response<AddGroupDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
         }
 
     }
