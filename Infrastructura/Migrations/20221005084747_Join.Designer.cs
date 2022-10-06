@@ -3,6 +3,7 @@ using System;
 using Infrastructura.Cantext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221005084747_Join")]
+    partial class Join
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,6 +54,9 @@ namespace Infrastructura.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ChalangeId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ChallangeId")
                         .HasColumnType("integer");
 
@@ -70,7 +76,7 @@ namespace Infrastructura.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChallangeId");
+                    b.HasIndex("ChalangeId");
 
                     b.ToTable("Groupes");
                 });
@@ -136,13 +142,13 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Groups", b =>
                 {
-                    b.HasOne("Domain.Entites.Chalange", "Challange")
+                    b.HasOne("Domain.Entites.Chalange", "Chalange")
                         .WithMany("Groupes")
-                        .HasForeignKey("ChallangeId")
+                        .HasForeignKey("ChalangeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Challange");
+                    b.Navigation("Chalange");
                 });
 
             modelBuilder.Entity("Domain.Entites.Participant", b =>

@@ -25,6 +25,7 @@ public class ChelengeServices : IChalengesServices
             };
             await _context.Chalanges.AddAsync(chalange);
             await _context.SaveChangesAsync();
+            model.Id = chalange.Id;
             return new Response<AddChalangeDto>(model);
         }
         catch (System.Exception ex)

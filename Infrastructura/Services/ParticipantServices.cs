@@ -20,10 +20,13 @@ public class ParticipantServices : IParticipantServices
                 Email = model.Email,
                 FullName = model.FullName,
                 CreatedAt = model.CreatedAt,
-                Phone = model.Phone
+                Phone = model.Phone,
+                LocationId = model.LocationId,
+                GroupId = model.GroupId
             };
             await _context.Participants.AddAsync(participant);
             await _context.SaveChangesAsync();
+            model.Id = participant.Id;
             return new Response<AddParticipantDto>(model);
         }
         catch (System.Exception ex)
@@ -33,15 +36,22 @@ public class ParticipantServices : IParticipantServices
     }
     public async Task<Response<List<GetParticipantDto>>> GetParticipant()
     {
-        var participant = await _context.Participants.Select(P => new GetParticipantDto()
-        {
-            Email = P.Email,
-            Id = P.Id,
-            FullName = P.FullName,
-            Phone = P.Phone,
-            CreatedAt = P.CreatedAt,
-        }).ToListAsync();
-        var response = await _context.Groupes.ToListAsync();
+        var participant = await (from pr in _context.Participants
+                                 join gr in _context.Groupes
+                                 on pr.GroupId equals gr.Id
+                                 join lc in _context.Locations
+                                 on pr.LocationId equals lc.Id
+                                 orderby gr.CreatedAt descending
+                                 select new GetParticipantDto
+                                 {
+                                     Email = pr.Email,
+                                     Id = pr.Id,
+                                     FullName = pr.FullName,
+                                     Phone = pr.Phone,
+                                     CreatedAt = pr.CreatedAt,
+                                     Location = lc.Name,
+                                     Group = gr.GroupsNick
+                                 }).ToListAsync();
         return new Response<List<GetParticipantDto>>(participant);
     }
     public async Task<Response<AddParticipantDto>> UpdateParticipant(AddParticipantDto participant)
@@ -54,6 +64,8 @@ public class ParticipantServices : IParticipantServices
             record.FullName = participant.FullName;
             record.CreatedAt = participant.CreatedAt;
             record.Phone = participant.Phone;
+            record.LocationId = participant.LocationId;
+            record.GroupId = participant.GroupId;
             await _context.SaveChangesAsync();
             return new Response<AddParticipantDto>(participant);
         }

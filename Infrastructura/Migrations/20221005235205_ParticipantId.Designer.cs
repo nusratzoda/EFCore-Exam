@@ -3,6 +3,7 @@ using System;
 using Infrastructura.Cantext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221005235205_ParticipantId")]
+    partial class ParticipantId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,6 +124,9 @@ namespace Infrastructura.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("LoctionId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
@@ -129,7 +135,7 @@ namespace Infrastructura.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("LoctionId");
 
                     b.ToTable("Participants");
                 });
@@ -155,7 +161,7 @@ namespace Infrastructura.Migrations
 
                     b.HasOne("Domain.Entites.Location", "Location")
                         .WithMany("Participants")
-                        .HasForeignKey("LocationId")
+                        .HasForeignKey("LoctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -19,10 +19,12 @@ public class LocationServices : ILocationServices
             var location = new Location()
             {
                 Description = model.Description,
-                Name = model.Name
+                Name = model.Name,
+
             };
             await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
+            model.Id = location.Id;
             return new Response<AddLocationDto>(model);
         }
         catch (System.Exception ex)

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221004234050_challengeId")]
-    partial class challengeId
+    [Migration("20221006001359_Participant")]
+    partial class Participant
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,10 @@ namespace Infrastructura.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChalangeId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ChallangeId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("GroupsNick")
@@ -76,7 +73,7 @@ namespace Infrastructura.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChalangeId");
+                    b.HasIndex("ChallangeId");
 
                     b.ToTable("Groupes");
                 });
@@ -110,7 +107,7 @@ namespace Infrastructura.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -127,6 +124,9 @@ namespace Infrastructura.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("LoctionId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
@@ -135,20 +135,20 @@ namespace Infrastructura.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("LoctionId");
 
                     b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Groups", b =>
                 {
-                    b.HasOne("Domain.Entites.Chalange", "Chalange")
+                    b.HasOne("Domain.Entites.Chalange", "Challange")
                         .WithMany("Groupes")
-                        .HasForeignKey("ChalangeId")
+                        .HasForeignKey("ChallangeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Chalange");
+                    b.Navigation("Challange");
                 });
 
             modelBuilder.Entity("Domain.Entites.Participant", b =>
@@ -161,7 +161,7 @@ namespace Infrastructura.Migrations
 
                     b.HasOne("Domain.Entites.Location", "Location")
                         .WithMany("Participants")
-                        .HasForeignKey("LocationId")
+                        .HasForeignKey("LoctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

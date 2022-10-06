@@ -27,6 +27,7 @@ public class GroupSevices : IGroupServices
             };
             await _context.Groupes.AddAsync(group);
             await _context.SaveChangesAsync();
+            model.Id = group.Id;
             return new Response<AddGroupDto>(model);
         }
 
@@ -40,19 +41,23 @@ public class GroupSevices : IGroupServices
     public async Task<Response<List<GetGroupDto>>> GetGroups()
     {
 
-        var group = await _context.Groupes.Select(G => new GetGroupDto()
-        {
-            TeamSlogan = G.TeamSlogan,
-            Id = G.Id,
-            NeededMember = G.NeededMember,
-            GroupsNick = G.GroupsNick,
-            CreatedAt = G.CreatedAt,
-            ChallangeId = G.ChallangeId
-        }).ToListAsync();
-        var response = await _context.Groupes.ToListAsync();
+        var group = await (from gr in _context.Groupes
+
+                           join ch in _context.Chalanges
+                           on gr.ChallangeId equals ch.Id
+                           orderby gr.CreatedAt descending
+                           select new GetGroupDto
+                           {
+                               ChallangeId = ch.Id,
+                               ChallangeName = ch.Title,
+                               TeamSlogan = gr.TeamSlogan,
+                               Id = gr.Id,
+                               NeededMember = gr.NeededMember,
+                               GroupsNick = gr.GroupsNick,
+                               CreatedAt = gr.CreatedAt
+                           }).ToListAsync();
+
         return new Response<List<GetGroupDto>>(group);
-
-
     }
     public async Task<Response<AddGroupDto>> UpdateGroups(AddGroupDto groups)
     {
