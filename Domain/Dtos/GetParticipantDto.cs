@@ -7,6 +7,8 @@ public class GetParticipantDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
-    public string Location { get; set; }
-    public string Group { get; set; }
+    public string LocationName { get; set; }
+    public int LocationId { get; set; }
+    public string GroupName { get; set; }
+    public int GroupId { get; set; }
 }

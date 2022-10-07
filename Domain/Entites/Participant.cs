@@ -11,7 +11,7 @@ public class Participant
     public DateTimeOffset CreatedAt { get; set; }
     public int GroupId { get; set; }
     [ForeignKey("GroupId")]
-    public virtual Groups Group { get; set; }
+    public virtual Group Group { get; set; }
     public int LocationId { get; set; }
     [ForeignKey("LocationId")]
     public virtual Location Location { get; set; }

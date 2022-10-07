@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221006001359_Participant")]
-    partial class Participant
+    [Migration("20221007063720_Location")]
+    partial class Location
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,16 +37,25 @@ namespace Infrastructura.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.ToTable("Chalanges");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,9 +133,6 @@ namespace Infrastructura.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("LoctionId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
@@ -135,15 +141,24 @@ namespace Infrastructura.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("LoctionId");
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Participants");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Chalange", b =>
+                {
+                    b.HasOne("Domain.Entites.Location", null)
+                        .WithMany("Chalanges")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.HasOne("Domain.Entites.Chalange", "Challange")
-                        .WithMany("Groupes")
+                        .WithMany("Groups")
                         .HasForeignKey("ChallangeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -153,15 +168,15 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Participant", b =>
                 {
-                    b.HasOne("Domain.Entites.Groups", "Group")
+                    b.HasOne("Domain.Entites.Group", "Group")
                         .WithMany("Participants")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Location", "Location")
-                        .WithMany("Participants")
-                        .HasForeignKey("LoctionId")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -172,17 +187,17 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Chalange", b =>
                 {
-                    b.Navigation("Groupes");
+                    b.Navigation("Groups");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Location", b =>
                 {
-                    b.Navigation("Participants");
+                    b.Navigation("Chalanges");
                 });
 #pragma warning restore 612, 618
         }

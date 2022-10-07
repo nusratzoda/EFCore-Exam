@@ -38,13 +38,25 @@ public class ChelengeServices : IChalengesServices
     }
     public async Task<Response<List<GetChalangeDto>>> GetChalange()
     {
-        var locations = await _context.Chalanges.Select(C => new GetChalangeDto()
-        {
-            Description = C.Description,
-            Id = C.Id,
-            Title = C.Title
-        }).ToListAsync();
-        return new Response<List<GetChalangeDto>>(locations);
+        var challenge = await (from ch in _context.Chalanges
+                               select new GetChalangeDto()
+                               {
+                                   Description = ch.Description,
+                                   Id = ch.Id,
+                                   Title = ch.Title,
+                                   Groupes = (from g in _context.Groupes
+                                              where g.ChallangeId == ch.Id
+                                              select new GetGroupDto()
+                                              {
+                                                  ChallangeId = g.ChallangeId,
+                                                  GroupsNick = g.GroupsNick,
+                                                  NeededMember = g.NeededMember,
+                                                  TeamSlogan = g.TeamSlogan,
+                                                  Id = g.Id
+                                              }).ToList(),
+
+                               }).ToListAsync();
+        return new Response<List<GetChalangeDto>>(challenge);
 
     }
     public async Task<Response<AddChalangeDto>> UpdateChalange(AddChalangeDto chalange)

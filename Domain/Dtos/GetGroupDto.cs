@@ -9,5 +9,7 @@ public class GetGroupDto
     public DateTimeOffset CreatedAt { get; set; }
     public int ChallangeId { get; set; }
     public string ChallangeName { get; set; }
+    public List<GetParticipantDto> Participants { get; set; }
+
 
 }

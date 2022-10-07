@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entites;
 
-public class Groups
+public class Group
 {
     public int Id { get; set; }
     public string GroupsNick { get; set; }

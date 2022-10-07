@@ -17,7 +17,7 @@ public class GroupSevices : IGroupServices
     {
         try
         {
-            var group = new Groups()
+            var group = new Group()
             {
                 TeamSlogan = model.TeamSlogan,
                 NeededMember = model.NeededMember,
@@ -42,21 +42,35 @@ public class GroupSevices : IGroupServices
     {
 
         var group = await (from gr in _context.Groupes
-
                            join ch in _context.Chalanges
-                           on gr.ChallangeId equals ch.Id
-                           orderby gr.CreatedAt descending
-                           select new GetGroupDto
+                            on gr.ChallangeId equals ch.Id
+                           select new GetGroupDto()
                            {
+                               NeededMember = gr.NeededMember,
+                               Id = gr.Id,
+                               GroupsNick = gr.GroupsNick,
+                               TeamSlogan = gr.TeamSlogan,
+                               CreatedAt = gr.CreatedAt,
                                ChallangeId = ch.Id,
                                ChallangeName = ch.Title,
-                               TeamSlogan = gr.TeamSlogan,
-                               Id = gr.Id,
-                               NeededMember = gr.NeededMember,
-                               GroupsNick = gr.GroupsNick,
-                               CreatedAt = gr.CreatedAt
-                           }).ToListAsync();
+                               Participants = (from pr in _context.Participants
+                                               where gr.Id == pr.GroupId
+                                               join lo in _context.Locations
+                                               on pr.LocationId equals lo.Id
+                                               select new GetParticipantDto()
+                                               {
+                                                   CreatedAt = pr.CreatedAt,
+                                                   Email = pr.Email,
+                                                   FullName = pr.FullName,
+                                                   Phone = pr.Phone,
+                                                   Id = pr.Id,
+                                                   LocationId = pr.LocationId,
+                                                   GroupId = pr.GroupId,
+                                                   GroupName = gr.GroupsNick,
+                                                   LocationName = lo.Name,
+                                               }).ToList(),
 
+                           }).ToListAsync();
         return new Response<List<GetGroupDto>>(group);
     }
     public async Task<Response<AddGroupDto>> UpdateGroups(AddGroupDto groups)

@@ -49,8 +49,8 @@ public class ParticipantServices : IParticipantServices
                                      FullName = pr.FullName,
                                      Phone = pr.Phone,
                                      CreatedAt = pr.CreatedAt,
-                                     Location = lc.Name,
-                                     Group = gr.GroupsNick
+                                     LocationName = lc.Name,
+                                     GroupName = gr.GroupsNick
                                  }).ToListAsync();
         return new Response<List<GetParticipantDto>>(participant);
     }

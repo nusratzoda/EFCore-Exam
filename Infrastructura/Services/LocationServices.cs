@@ -4,7 +4,6 @@ using Domain.Response;
 using Infrastructura.Cantext;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructura.Services;
-
 public class LocationServices : ILocationServices
 {
     private readonly DataContext _context;
@@ -20,7 +19,6 @@ public class LocationServices : ILocationServices
             {
                 Description = model.Description,
                 Name = model.Name,
-
             };
             await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
@@ -29,21 +27,28 @@ public class LocationServices : ILocationServices
         }
         catch (System.Exception ex)
         {
-
             return new Response<AddLocationDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
         }
-
     }
     public async Task<Response<List<GetLocationDto>>> GetLocation()
     {
-        var locations = await _context.Locations.Select(l => new GetLocationDto()
-        {
-            Description = l.Description,
-            Id = l.Id,
-            Name = l.Name
-        }).ToListAsync();
-        return new Response<List<GetLocationDto>>(locations);
+        var location = await (from lo in _context.Locations
+                              select new GetLocationDto()
+                              {
+                                  Description = lo.Description,
+                                  Id = lo.Id,
+                                  Name = lo.Name,
+                                  Chalanges = (from ch in _context.Chalanges
+                                               where ch.LocationId == lo.Id
+                                               select new GetChalangeDto()
+                                               {
+                                                   Title = ch.Title,
+                                                   Description = ch.Description,
+                                                   Id = ch.Id,
+                                               }).ToList(),
+
+                              }).ToListAsync();
+        return new Response<List<GetLocationDto>>(location);
     }
     public async Task<Response<AddLocationDto>> UpdateLocation(AddLocationDto location)
     {
@@ -58,13 +63,9 @@ public class LocationServices : ILocationServices
         }
         catch (System.Exception ex)
         {
-
             return new Response<AddLocationDto>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
         }
-
     }
-
     public async Task<Response<string>> DaleteLocation(int id)
     {
         try
@@ -78,10 +79,7 @@ public class LocationServices : ILocationServices
         }
         catch (System.Exception ex)
         {
-
             return new Response<string>(System.Net.HttpStatusCode.InternalServerError, ex.Message);
-
         }
-
     }
 }

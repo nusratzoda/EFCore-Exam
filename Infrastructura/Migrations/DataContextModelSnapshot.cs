@@ -34,16 +34,25 @@ namespace Infrastructura.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.ToTable("Chalanges");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,10 +143,19 @@ namespace Infrastructura.Migrations
                     b.ToTable("Participants");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Chalange", b =>
+                {
+                    b.HasOne("Domain.Entites.Location", null)
+                        .WithMany("Chalanges")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.HasOne("Domain.Entites.Chalange", "Challange")
-                        .WithMany("Groupes")
+                        .WithMany("Groups")
                         .HasForeignKey("ChallangeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -147,14 +165,14 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Participant", b =>
                 {
-                    b.HasOne("Domain.Entites.Groups", "Group")
+                    b.HasOne("Domain.Entites.Group", "Group")
                         .WithMany("Participants")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Location", "Location")
-                        .WithMany("Participants")
+                        .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -166,17 +184,17 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Chalange", b =>
                 {
-                    b.Navigation("Groupes");
+                    b.Navigation("Groups");
                 });
 
-            modelBuilder.Entity("Domain.Entites.Groups", b =>
+            modelBuilder.Entity("Domain.Entites.Group", b =>
                 {
                     b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Domain.Entites.Location", b =>
                 {
-                    b.Navigation("Participants");
+                    b.Navigation("Chalanges");
                 });
 #pragma warning restore 612, 618
         }

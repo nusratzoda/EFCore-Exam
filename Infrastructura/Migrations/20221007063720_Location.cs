@@ -7,25 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     /// <inheritdoc />
-    public partial class Join : Migration
+    public partial class Location : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Chalanges",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Chalanges", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Locations",
                 columns: table => new
@@ -41,6 +27,28 @@ namespace Infrastructura.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Chalanges",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    LocationId = table.Column<int>(type: "integer", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chalanges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chalanges_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groupes",
                 columns: table => new
                 {
@@ -48,7 +56,6 @@ namespace Infrastructura.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GroupsNick = table.Column<string>(type: "text", nullable: false),
                     ChallangeId = table.Column<int>(type: "integer", nullable: false),
-                    ChalangeId = table.Column<int>(type: "integer", nullable: false),
                     NeededMember = table.Column<bool>(type: "boolean", nullable: false),
                     TeamSlogan = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
@@ -57,8 +64,8 @@ namespace Infrastructura.Migrations
                 {
                     table.PrimaryKey("PK_Groupes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groupes_Chalanges_ChalangeId",
-                        column: x => x.ChalangeId,
+                        name: "FK_Groupes_Chalanges_ChallangeId",
+                        column: x => x.ChallangeId,
                         principalTable: "Chalanges",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -95,9 +102,14 @@ namespace Infrastructura.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groupes_ChalangeId",
+                name: "IX_Chalanges_LocationId",
+                table: "Chalanges",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groupes_ChallangeId",
                 table: "Groupes",
-                column: "ChalangeId");
+                column: "ChallangeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Participants_GroupId",
@@ -120,10 +132,10 @@ namespace Infrastructura.Migrations
                 name: "Groupes");
 
             migrationBuilder.DropTable(
-                name: "Locations");
+                name: "Chalanges");
 
             migrationBuilder.DropTable(
-                name: "Chalanges");
+                name: "Locations");
         }
     }
 }
