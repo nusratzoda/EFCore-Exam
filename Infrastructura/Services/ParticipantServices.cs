@@ -55,12 +55,6 @@ public class ParticipantServices : IParticipantServices
         {
             var record = await _context.Participants.FindAsync(participant.Id);
             if (record == null) return new Response<AddParticipantDto>(System.Net.HttpStatusCode.NotFound, "No record found");
-            record.Email = participant.Email;
-            record.FullName = participant.FullName;
-            record.CreatedAt = participant.CreatedAt;
-            record.Phone = participant.Phone;
-            record.LocationId = participant.LocationId;
-            record.GroupId = participant.GroupId;
             await _context.SaveChangesAsync();
             return new Response<AddParticipantDto>(participant);
         }
