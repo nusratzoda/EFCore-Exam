@@ -9,7 +9,14 @@ public class AddGroupDto
 
     public string GroupsNick { get; set; }
     public bool NeededMember { get; set; }
+    [MaxLength(300)]
+
     public string TeamSlogan { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public int ChallangeId { get; set; }
+
+    public AddGroupDto()
+    {
+        CreatedAt = DateTimeOffset.Now;
+    }
 }

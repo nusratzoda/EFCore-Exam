@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
@@ -10,9 +11,11 @@ public class ChelengeServices : IChalengesServices
 
 
     private readonly DataContext _context;
-    public ChelengeServices(DataContext context)
+    private readonly IMapper _mapper;
+    public ChelengeServices(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<Response<AddChalangeDto>> AddChalange(AddChalangeDto model)
     {
@@ -46,14 +49,16 @@ public class ChelengeServices : IChalengesServices
                                    Title = ch.Title,
                                    Groupes = (from g in _context.Groupes
                                               where g.ChallangeId == ch.Id
-                                              select new GetGroupDto()
-                                              {
-                                                  ChallangeId = g.ChallangeId,
-                                                  GroupsNick = g.GroupsNick,
-                                                  NeededMember = g.NeededMember,
-                                                  TeamSlogan = g.TeamSlogan,
-                                                  Id = g.Id
-                                              }).ToList(),
+                                              select _mapper.Map<GetGroupDto>(g)
+                                              //   select new GetGroupDto()
+                                              //   {
+                                              //       ChallangeId = g.ChallangeId,
+                                              //       GroupsNick = g.GroupsNick,
+                                              //       NeededMember = g.NeededMember,
+                                              //       TeamSlogan = g.TeamSlogan,
+                                              //       Id = g.Id
+                                              //   }
+                                              ).ToList(),
 
                                }).ToListAsync();
         return new Response<List<GetChalangeDto>>(challenge);
@@ -77,7 +82,11 @@ public class ChelengeServices : IChalengesServices
         }
 
     }
-
+    public async Task<Response<GetChalangeDto>> GetChalangeById(int id)
+    {
+        var result = _mapper.Map<GetChalangeDto>(await _context.Chalanges.FindAsync(id));
+        return new Response<GetChalangeDto>(result);
+    }
     public async Task<Response<string>> DaleteAuthor(int id)
     {
         try

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
@@ -7,12 +8,16 @@ namespace Infrastructura.Services;
 public class LocationServices : ILocationServices
 {
     private readonly DataContext _context;
-    public LocationServices(DataContext context)
+    private readonly IMapper _mapper;
+    public LocationServices(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<Response<AddLocationDto>> AddLocation(AddLocationDto model)
     {
+
+
         try
         {
             var location = new Location()
@@ -40,12 +45,14 @@ public class LocationServices : ILocationServices
                                   Name = lo.Name,
                                   Chalanges = (from ch in _context.Chalanges
                                                where ch.LocationId == lo.Id
-                                               select new GetChalangeDto()
-                                               {
-                                                   Title = ch.Title,
-                                                   Description = ch.Description,
-                                                   Id = ch.Id,
-                                               }).ToList(),
+                                               select _mapper.Map<GetChalangeDto>(ch)
+                                               //    select new GetChalangeDto()
+                                               //    {
+                                               //        Title = ch.Title,
+                                               //        Description = ch.Description,
+                                               //        Id = ch.Id,
+                                               //    }
+                                               ).ToList(),
 
                               }).ToListAsync();
         return new Response<List<GetLocationDto>>(location);

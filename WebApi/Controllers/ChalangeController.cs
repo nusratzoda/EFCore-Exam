@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
@@ -11,9 +12,11 @@ public class ChalangeController : ControllerBase
 {
     private readonly IChalengesServices _cahlengeService;
 
+
     public ChalangeController(IChalengesServices cahlengeService)
     {
         _cahlengeService = cahlengeService;
+
     }
 
     [HttpGet]
@@ -22,6 +25,12 @@ public class ChalangeController : ControllerBase
         return await _cahlengeService.GetChalange();
     }
 
+
+    [HttpGet("GetChallengeById")]
+    public async Task<Response<GetChalangeDto>> GetChalangeById(int id)
+    {
+        return await _cahlengeService.GetChalangeById(id);
+    }
 
     [HttpPost]
     public async Task<Response<AddChalangeDto>> AddChalange(AddChalangeDto chalange)

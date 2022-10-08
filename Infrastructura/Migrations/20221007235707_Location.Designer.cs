@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructura.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221007063720_Location")]
+    [Migration("20221007235707_Location")]
     partial class Location
     {
         /// <inheritdoc />
@@ -46,11 +46,10 @@ namespace Infrastructura.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("Chalanges");
                 });
@@ -71,14 +70,16 @@ namespace Infrastructura.Migrations
 
                     b.Property<string>("GroupsNick")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<bool>("NeededMember")
                         .HasColumnType("boolean");
 
                     b.Property<string>("TeamSlogan")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.HasKey("Id");
 
@@ -101,7 +102,8 @@ namespace Infrastructura.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 
@@ -125,7 +127,8 @@ namespace Infrastructura.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
@@ -135,7 +138,8 @@ namespace Infrastructura.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
 
                     b.HasKey("Id");
 
@@ -144,15 +148,6 @@ namespace Infrastructura.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("Participants");
-                });
-
-            modelBuilder.Entity("Domain.Entites.Chalange", b =>
-                {
-                    b.HasOne("Domain.Entites.Location", null)
-                        .WithMany("Chalanges")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entites.Group", b =>
@@ -175,7 +170,7 @@ namespace Infrastructura.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.Location", "Location")
-                        .WithMany()
+                        .WithMany("Participants")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -197,7 +192,7 @@ namespace Infrastructura.Migrations
 
             modelBuilder.Entity("Domain.Entites.Location", b =>
                 {
-                    b.Navigation("Chalanges");
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }
