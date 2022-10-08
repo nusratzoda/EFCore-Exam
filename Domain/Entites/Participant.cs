@@ -24,7 +24,7 @@ public class Participant
     public virtual Location Location { get; set; }
     public Participant()
     {
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTimeOffset.Now;
     }
 
 }

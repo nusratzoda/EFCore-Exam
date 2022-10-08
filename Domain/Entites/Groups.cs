@@ -21,6 +21,6 @@ public class Group
 
     public Group()
     {
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTimeOffset.Now;
     }
 }

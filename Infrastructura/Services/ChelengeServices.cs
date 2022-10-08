@@ -21,15 +21,11 @@ public class ChelengeServices : IChalengesServices
     {
         try
         {
-            var chalange = new Chalange()
-            {
-                Description = model.Description,
-                Title = model.Title
-            };
-            await _context.Chalanges.AddAsync(chalange);
+            Chalange mapped = _mapper.Map<Chalange>(model);
+            await _context.Chalanges.AddAsync(mapped);
             await _context.SaveChangesAsync();
-            model.Id = chalange.Id;
-            return new Response<AddChalangeDto>(model);
+            model.Id = mapped.Id;
+            return new Response<AddChalangeDto>(_mapper.Map<AddChalangeDto>(mapped));
         }
         catch (System.Exception ex)
         {

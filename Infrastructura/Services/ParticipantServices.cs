@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
@@ -7,27 +8,21 @@ namespace Infrastructura.Services;
 public class ParticipantServices : IParticipantServices
 {
     private readonly DataContext _context;
-    public ParticipantServices(DataContext context)
+    private readonly IMapper _mapper;
+    public ParticipantServices(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<Response<AddParticipantDto>> AddParticipant(AddParticipantDto model)
     {
         try
         {
-            var participant = new Participant()
-            {
-                Email = model.Email,
-                FullName = model.FullName,
-                CreatedAt = model.CreatedAt,
-                Phone = model.Phone,
-                LocationId = model.LocationId,
-                GroupId = model.GroupId
-            };
-            await _context.Participants.AddAsync(participant);
+            Participant mapped = _mapper.Map<Participant>(model);
+            await _context.Participants.AddAsync(mapped);
             await _context.SaveChangesAsync();
-            model.Id = participant.Id;
-            return new Response<AddParticipantDto>(model);
+            model.Id = mapped.Id;
+            return new Response<AddParticipantDto>(_mapper.Map<AddParticipantDto>(mapped));
         }
         catch (System.Exception ex)
         {

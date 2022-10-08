@@ -8,8 +8,11 @@ public class ServicesProfile : Profile
 {
     public ServicesProfile()
     {
-        CreateMap<Chalange, GetChalangeDto>();
-        CreateMap<Group, GetGroupDto>();
-        CreateMap<Location, AddLocationDto>();
+        CreateMap<Chalange, GetChalangeDto>().ReverseMap();
+        CreateMap<AddChalangeDto, Chalange>().ReverseMap();
+        CreateMap<Group, GetGroupDto>().ReverseMap();
+        CreateMap<Group, AddGroupDto>().ReverseMap();
+        CreateMap<Location, AddLocationDto>().ReverseMap();
+        CreateMap<Participant, AddParticipantDto>().ReverseMap();
     }
 }

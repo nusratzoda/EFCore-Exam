@@ -16,7 +16,7 @@ builder.Services.AddScoped<IChalengesServices, ChelengeServices>();
 builder.Services.AddScoped<ILocationServices, LocationServices>();
 builder.Services.AddScoped<IGroupServices, GroupSevices>();
 builder.Services.AddScoped<IParticipantServices, ParticipantServices>();
-builder.Services.AddAutoMapper(typeof(ServicesProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(ServicesProfile));
 //register database
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));

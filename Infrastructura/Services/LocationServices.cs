@@ -16,19 +16,13 @@ public class LocationServices : ILocationServices
     }
     public async Task<Response<AddLocationDto>> AddLocation(AddLocationDto model)
     {
-
-
         try
         {
-            var location = new Location()
-            {
-                Description = model.Description,
-                Name = model.Name,
-            };
-            await _context.Locations.AddAsync(location);
+            Location mapped = _mapper.Map<Location>(model);
+            await _context.Locations.AddAsync(mapped);
             await _context.SaveChangesAsync();
-            model.Id = location.Id;
-            return new Response<AddLocationDto>(model);
+            model.Id = mapped.Id;
+            return new Response<AddLocationDto>(_mapper.Map<AddLocationDto>(mapped));
         }
         catch (System.Exception ex)
         {

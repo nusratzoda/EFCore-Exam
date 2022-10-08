@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Dtos;
 using Domain.Entites;
 using Domain.Response;
@@ -9,26 +10,24 @@ namespace Infrastructura.Services;
 public class GroupSevices : IGroupServices
 {
     private readonly DataContext _context;
-    public GroupSevices(DataContext context)
+    private readonly IMapper _mapper;
+    public GroupSevices(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<Response<AddGroupDto>> AddGroups(AddGroupDto model)
     {
         try
         {
-            var group = new Group()
-            {
-                TeamSlogan = model.TeamSlogan,
-                NeededMember = model.NeededMember,
-                CreatedAt = model.CreatedAt,
-                GroupsNick = model.GroupsNick,
-                ChallangeId = model.ChallangeId
-            };
-            await _context.Groupes.AddAsync(group);
+
+            Group mapped = _mapper.Map<Group>(model);
+
+
+            await _context.Groupes.AddAsync(mapped);
             await _context.SaveChangesAsync();
-            model.Id = group.Id;
-            return new Response<AddGroupDto>(model);
+            model.Id = mapped.Id;
+            return new Response<AddGroupDto>(_mapper.Map<AddGroupDto>(mapped));
         }
 
         catch (Exception ex)
